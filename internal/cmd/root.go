@@ -10,10 +10,11 @@ import (
 	"os"
 	"strings"
 
-	"github.com/carabiner-dev/revex/pkg/fix"
 	"github.com/openvex/go-vex/pkg/vex"
 	"github.com/spf13/cobra"
 	"sigs.k8s.io/release-utils/log"
+
+	"github.com/carabiner-dev/revex/pkg/fix"
 )
 
 const appname = "revex"
@@ -62,7 +63,7 @@ func Execute() error {
 		}{},
 	}
 
-	var rootCmd = &cobra.Command{
+	rootCmd := &cobra.Command{
 		Short: fmt.Sprintf("%s: correct VEX documents", appname),
 		Long: `
 revex: A simple tool to correct know errors in VEX documents.
@@ -131,7 +132,7 @@ to correct through it, for example:
 			//
 			fixer := fix.Fixer{}
 
-			var correctors = []fix.Corrector{}
+			correctors := []fix.Corrector{}
 
 			if opts.FixGoVulnCheckPurl {
 				correctors = append(correctors, fix.WithFixVulncheckPurls())
@@ -160,7 +161,9 @@ to correct through it, for example:
 				}
 			}
 
-			fixer.CorrectStream(in, os.Stdout, correctors...)
+			if err := fixer.CorrectStream(in, os.Stdout, correctors...); err != nil {
+				return err
+			}
 			return nil
 		},
 	}

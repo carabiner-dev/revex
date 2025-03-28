@@ -10,8 +10,7 @@ import (
 	"github.com/openvex/go-vex/pkg/vex"
 )
 
-type Fixer struct {
-}
+type Fixer struct{}
 
 type Corrector func(*vex.VEX) error
 

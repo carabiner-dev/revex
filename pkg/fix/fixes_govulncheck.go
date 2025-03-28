@@ -8,9 +8,8 @@ import (
 	"net/url"
 	"strings"
 
-	purl "github.com/package-url/packageurl-go"
-
 	"github.com/openvex/go-vex/pkg/vex"
+	purl "github.com/package-url/packageurl-go"
 )
 
 type FixPack struct {
