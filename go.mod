@@ -1,6 +1,7 @@
 module github.com/carabiner-dev/revex
 
 go 1.24.0
+
 require (
 	github.com/openvex/go-vex v0.2.5
 	github.com/package-url/packageurl-go v0.1.3
