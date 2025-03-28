@@ -75,7 +75,7 @@ jobs:
         shell: bash
         run : |
             bnd predicate /tmp/drop-${{ steps.tag.outputs.tag_name }}.spdx.json --type="https://spdx.dev/Document" --subject="sha1:${{ github.sha }}" > sbom.spdx.bundle.json
-            bnd pack -o ${{ steps.tag.outputs.tag_name }}.provenance.bundle.json sbom.spdx.bundle.json > attestations.jsonl
+            bnd pack ${{ steps.tag.outputs.tag_name }}.provenance.bundle.json sbom.spdx.bundle.json > attestations.jsonl
             gh release upload ${{ steps.tag.outputs.tag_name }} attestations.jsonl
 
           
