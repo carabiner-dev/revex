@@ -1,0 +1,55 @@
+{
+  "@context": "https://openvex.dev/ns/v0.2.0",
+  "@id": "govulncheck/vex:f47c1fa435a632b176e2f60a0b6fed5051c4a715668bcbfa3e2db75f22f49e73",
+  "author": "Unknown Author",
+  "timestamp": "2025-03-28T00:57:21.343808559Z",
+  "version": 1,
+  "tooling": "https://pkg.go.dev/golang.org/x/vuln/cmd/govulncheck",
+  "statements": [
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2025-3485",
+        "name": "GO-2025-3485",
+        "description": "DoS in go-jose Parsing in github.com/go-jose/go-jose",
+        "aliases": [
+          "CVE-2025-27144",
+          "GHSA-c6gw-w398-hv78"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/github.com%2Fgo-jose%2Fgo-jose%2Fv4@v4.0.2"
+            }
+          ]
+        }
+      ],
+      "status": "not_affected",
+      "justification": "vulnerable_code_not_in_execute_path",
+      "impact_statement": "Govulncheck determined that the vulnerable code isn't called"
+    },
+    {
+      "vulnerability": {
+        "@id": "https://pkg.go.dev/vuln/GO-2025-3503",
+        "name": "GO-2025-3503",
+        "description": "HTTP Proxy bypass using IPv6 Zone IDs in golang.org/x/net",
+        "aliases": [
+          "CVE-2025-22870"
+        ]
+      },
+      "products": [
+        {
+          "@id": "Unknown Product",
+          "subcomponents": [
+            {
+              "@id": "pkg:golang/golang.org%2Fx%2Fnet@v0.35.0"
+            }
+          ]
+        }
+      ],
+      "status": "affected"
+    }
+  ]
+}
