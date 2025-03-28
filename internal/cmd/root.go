@@ -63,9 +63,42 @@ func Execute() error {
 	}
 
 	var rootCmd = &cobra.Command{
-		Short:             fmt.Sprintf("%s: correct VEX documents", appname),
-		Long:              fmt.Sprintf("%s: correct VEX documents", appname),
-		Use:               appname,
+		Short: fmt.Sprintf("%s: correct VEX documents", appname),
+		Long: `
+revex: A simple tool to correct know errors in VEX documents.
+
+This tool collects hacks to address problems know in the output of common tools.
+It is designed to receive a piped VEX document in its input, apply a couple of
+fixes and output the correct document.
+
+The fixes are enabled through the command line, they flags are prefixed with 
+a string that indicates which tool each fix is intended to work with.
+
+--gcv Fixes (govulncheck)
+
+The govulnchecl security tool can output native vex documents but it has two
+problems: It creates invalid product entries and it generates package urls 
+that are not compatible with the way most tools expect. To correct them:
+
+  --gvc-fix-purls (bool)
+    When enabled, revex will look for the percent-escaped purls from govulncheck
+    and rewrite them to their unescaped equivalents.
+
+  --gvc-product-id / --gvc-product-purl
+    This flag rewrites the string "Unknown Product" with the supplied id. If
+	the ID is a package URL it will also be populated int the product identifier.
+	If the prodouct ID is not a package URL, you can still set it using the
+	--gvc-product-purl flag.
+
+`,
+		Use: fmt.Sprintf("%s [flags] document.openvex.json", appname),
+		Example: `
+The simplest way to use revex is to pipe the VEX output of the tool you need
+to correct through it, for example:
+
+  govulncheck -format openvex ./... | \
+      revex --gvc-fix-purls --gvc-product-id="pkg:generic/myapp@1.0.0"
+`,
 		SilenceUsage:      false,
 		PersistentPreRunE: initLogging,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
