@@ -4,7 +4,9 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -27,6 +29,7 @@ func initLogging(*cobra.Command, []string) error {
 }
 
 type Options struct {
+	Path               string
 	FixGoVulnCheckPurl bool
 	GoVulnCheck        struct {
 		ProductID string
@@ -35,6 +38,9 @@ type Options struct {
 }
 
 func (o *Options) AddFlags(cmd *cobra.Command) {
+	cmd.PersistentFlags().StringVar(
+		&o.Path, "path", "", "Path to the VEX file to correct",
+	)
 	cmd.PersistentFlags().StringVar(
 		&o.GoVulnCheck.ProductID, "gvc-product-id", "", "ID to use in govulncheck's invalid VEX products",
 	)
@@ -63,6 +69,20 @@ func Execute() error {
 		SilenceUsage:      false,
 		PersistentPreRunE: initLogging,
 		PreRunE: func(cmd *cobra.Command, args []string) error {
+			if opts.Path == "" && len(args) > 0 {
+				opts.Path = args[0]
+			}
+			if opts.Path == "" {
+				fi, err := os.Stdin.Stat()
+				if err != nil {
+					return fmt.Errorf("checking stdin for data: %w", err)
+				}
+				if (fi.Mode() & os.ModeCharDevice) != 0 {
+					return errors.New("document path not specified")
+				}
+				opts.Path = "-"
+			}
+
 			if opts.GoVulnCheck.Purl == "" {
 				if strings.HasPrefix(opts.GoVulnCheck.ProductID, "pkg:golang") {
 					opts.GoVulnCheck.Purl = opts.GoVulnCheck.ProductID
@@ -96,10 +116,18 @@ func Execute() error {
 				correctors = append(correctors, fix.WithFixVulncheckProducts(prod))
 			}
 
-			fixer.CorrectStream(
-				os.Stdin, os.Stdout,
-				correctors...,
-			)
+			var in io.Reader
+			var err error
+			if opts.Path == "-" {
+				in = os.Stdin
+			} else {
+				in, err = os.Open(opts.Path)
+				if err != nil {
+					return fmt.Errorf("opening vex file: %w", err)
+				}
+			}
+
+			fixer.CorrectStream(in, os.Stdout, correctors...)
 			return nil
 		},
 	}
