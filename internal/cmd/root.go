@@ -32,8 +32,10 @@ func initLogging(*cobra.Command, []string) error {
 type Options struct {
 	Path               string
 	FixGoVulnCheckPurl bool
+	FilterStatuses     []string
 	GoVulnCheck        struct {
 		ProductID string
+		Hash      string
 		Purl      string
 	}
 }
@@ -48,8 +50,14 @@ func (o *Options) AddFlags(cmd *cobra.Command) {
 	cmd.PersistentFlags().StringVar(
 		&o.GoVulnCheck.Purl, "gvc-product-purl", "", "package URL to use in govulncheck's invalid VEX products (or ID if it's a purl)",
 	)
+	cmd.PersistentFlags().StringVar(
+		&o.GoVulnCheck.Hash, "gvc-product-hash", "", "hash to use in corrected VEX product",
+	)
 	cmd.PersistentFlags().BoolVar(
 		&o.FixGoVulnCheckPurl, "gvc-fix-purls", true, "Fix weird purls in govulncheck",
+	)
+	cmd.PersistentFlags().StringSliceVar(
+		&o.FilterStatuses, "filter-status", nil, "filter out statements with statuses other than this",
 	)
 }
 
@@ -59,6 +67,7 @@ func Execute() error {
 		FixGoVulnCheckPurl: false,
 		GoVulnCheck: struct {
 			ProductID string
+			Hash      string
 			Purl      string
 		}{},
 	}
@@ -138,16 +147,29 @@ to correct through it, for example:
 				correctors = append(correctors, fix.WithFixVulncheckPurls())
 			}
 
-			if opts.GoVulnCheck.ProductID != "" {
+			if opts.GoVulnCheck.ProductID != "" || opts.GoVulnCheck.Hash != "" {
 				prod := &vex.Component{
 					ID:          opts.GoVulnCheck.ProductID,
 					Identifiers: map[vex.IdentifierType]string{},
+					Hashes:      map[vex.Algorithm]vex.Hash{},
 				}
 
 				if opts.GoVulnCheck.Purl != "" {
 					prod.Identifiers[vex.PURL] = opts.GoVulnCheck.Purl
 				}
+
+				if opts.GoVulnCheck.Hash != "" {
+					algo, val, ok := strings.Cut(opts.GoVulnCheck.Hash, ":")
+					if ok {
+						// TODO(puerco): Check hash algo rithm
+						prod.Hashes[vex.Algorithm(algo)] = vex.Hash(val)
+					}
+				}
 				correctors = append(correctors, fix.WithFixVulncheckProducts(prod))
+			}
+
+			if len(opts.FilterStatuses) > 0 {
+				correctors = append(correctors, fix.WithFilterStatus(opts.FilterStatuses))
 			}
 
 			var in io.Reader

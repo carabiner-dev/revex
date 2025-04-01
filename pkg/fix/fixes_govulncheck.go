@@ -6,6 +6,7 @@ package fix
 import (
 	"fmt"
 	"net/url"
+	"slices"
 	"strings"
 
 	"github.com/openvex/go-vex/pkg/vex"
@@ -68,6 +69,23 @@ func WithFixVulncheckProducts(product *vex.Component) Corrector {
 					doc.Statements[i].Products[j].Supplier = product.Supplier
 					doc.Statements[i].Products[j].Identifiers = product.Identifiers
 				}
+			}
+		}
+		return nil
+	}
+}
+
+// WithFixVulncheckProducts  S ~[]E, E any]
+func WithFilterStatus[T ~[]string](statuses T) Corrector {
+	return func(doc *vex.VEX) error {
+		if doc == nil {
+			return fmt.Errorf("vex document is nil")
+		}
+		statements := doc.Statements
+		doc.Statements = []vex.Statement{}
+		for i := range statements {
+			if slices.Contains(statuses, string(statements[i].Status)) {
+				doc.Statements = append(doc.Statements, statements[i])
 			}
 		}
 		return nil
