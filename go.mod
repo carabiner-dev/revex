@@ -6,7 +6,7 @@ require (
 	github.com/openvex/go-vex v0.2.5
 	github.com/package-url/packageurl-go v0.1.3
 	github.com/spf13/cobra v1.9.1
-	sigs.k8s.io/release-utils v0.12.0
+	sigs.k8s.io/release-utils v0.12.1
 )
 
 require (
