@@ -3,7 +3,7 @@ module github.com/carabiner-dev/revex
 go 1.24.0
 
 require (
-	github.com/openvex/go-vex v0.2.6
+	github.com/openvex/go-vex v0.2.7
 	github.com/package-url/packageurl-go v0.1.3
 	github.com/spf13/cobra v1.9.1
 	sigs.k8s.io/release-utils v0.12.1
