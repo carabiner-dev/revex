@@ -7,9 +7,9 @@ on:
   push:
     tags:
       - 'v*'
-permissions:
-  contents: read
-  
+
+permissions: {}
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -18,7 +18,7 @@ jobs:
       contents: write
       id-token: write
       attestations: write
-      
+
     steps:
       - name: Setup bnd
         uses: carabiner-dev/bnd-actions/setup@HEAD
@@ -31,7 +31,8 @@ jobs:
 
       - uses: actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c # v6.1.0
         with:
-          go-version-file: go.mod
+          go-version: '1.25'
+          check-latest: true
           cache: false
 
       - name: Install tejolote
@@ -43,7 +44,7 @@ jobs:
       - name: Set tag output
         id: tag
         run: echo "tag_name=${GITHUB_REF#refs/*/}" >> "$GITHUB_OUTPUT"
-  
+
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@e435ccd777264be153ace6237001ef4d979d3a7a # v6.4.0
         id: goreleaser
@@ -77,5 +78,3 @@ jobs:
             bnd predicate /tmp/drop-${{ steps.tag.outputs.tag_name }}.spdx.json --type="https://spdx.dev/Document" --subject="sha1:${{ github.sha }}" > sbom.spdx.bundle.json
             bnd pack ${{ steps.tag.outputs.tag_name }}.provenance.bundle.json sbom.spdx.bundle.json > attestations.jsonl
             gh release upload ${{ steps.tag.outputs.tag_name }} attestations.jsonl
-
-          
