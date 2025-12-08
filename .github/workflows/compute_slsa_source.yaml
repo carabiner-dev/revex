@@ -2,8 +2,11 @@
 name: SLSA Source
 on:
   push:
-    branches: [ "main" ]
-    tags: ['**']
+    branches:
+      - "main"
+    tags:
+      - '**'
+
 permissions: {}
 
 jobs:
