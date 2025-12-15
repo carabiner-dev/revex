@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/openvex/go-vex v0.2.7
 	github.com/package-url/packageurl-go v0.1.3
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 	sigs.k8s.io/release-utils v0.12.2
 )
 
