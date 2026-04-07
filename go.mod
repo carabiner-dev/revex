@@ -1,19 +1,21 @@
 module github.com/carabiner-dev/revex
 
-go 1.24.0
+go 1.25.8
 
 require (
-	github.com/openvex/go-vex v0.2.7
+	github.com/openvex/go-vex v0.2.8
 	github.com/package-url/packageurl-go v0.1.5
 	github.com/spf13/cobra v1.10.2
-	sigs.k8s.io/release-utils v0.12.3
+	sigs.k8s.io/release-utils v0.12.4
 )
 
 require (
+	github.com/in-toto/attestation v1.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	golang.org/x/sys v0.38.0 // indirect
+	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
