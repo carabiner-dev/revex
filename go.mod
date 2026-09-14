@@ -1,9 +1,9 @@
 module github.com/carabiner-dev/revex
 
-go 1.25.8
+go 1.25.9
 
 require (
-	github.com/openvex/go-vex v0.2.8
+	github.com/openvex/go-vex v0.2.9
 	github.com/package-url/packageurl-go v0.1.7
 	github.com/spf13/cobra v1.10.2
 	sigs.k8s.io/release-utils v0.12.4
@@ -16,6 +16,6 @@ require (
 	github.com/sirupsen/logrus v1.9.4 // indirect
 	github.com/spf13/pflag v1.0.9 // indirect
 	golang.org/x/sys v0.38.0 // indirect
-	google.golang.org/protobuf v1.36.11 // indirect
+	google.golang.org/protobuf v1.36.12 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
